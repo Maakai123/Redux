@@ -1,48 +1,45 @@
-const initialStateCustomer = {
+import { createSlice } from "@reduxjs/toolkit"
+
+const initialState = {
     fullName:'',
     nationalID: '',
     createdAt: ''
 }
 
 
-//forr customers
+const customerSlice = createSlice({
+    name: "customer",
+    initialState,
+     
+    reducers: {
+        //prepare a payload
+        createCustomer:{
+       prepare(fullName, nationalID) {
+        return {
+            //create payload
+            payload: {
+                fullName,
+                nationalID,
+                createdAt: new Date().toISOString(),
+            },
+        };
+       },
 
-export default  function customerReducer( state = initialStateCustomer, action) {
-    switch( action.type) {
-        case "customer/createCustomer":
-            return {
-                ...state,
-                fullName: action.payload.fullName,
-                nationalID: action.payload.nationalID,
-                createdAt: action.payload.creaatedAt,
+       //reducer gets access to state and action
+       reducer(state, action) {
+        state.fullName = action.payload.fullName;
+        state.nationalID = action.payload.nationalID;
+        state.createdAt = action.payload.createdAt
+       }
+            
+        },
 
-            }
-
-            case "customer/updateName":
-                return { ...state, fullName: action.payload} 
-            default: return state
+       updateName(state, action) {
+        state.fullName = action.payload
+       } 
     }
-}
+})
 
+ export const { createCustomer, updateName} = customerSlice.actions;
 
-//customer has name and nationalId 
-
- export function createCustomer(fullName, nationalId) {
-    return {
-        type: "customer/createCustomer",
-        //new Date = current date
-        payload: { fullName, nationalId, createAt: new Date().
-            toISOString() },
-        }
-}
-
-
-export function updateName(fullName){
-    return { type: "account/update", payload: fullName}
-}
-
-/*
-store.dispatch(createCustomer("Maakai", "444444"))
-console.log(store.getState())
-*/
-
+ export default customerSlice.reducer;
